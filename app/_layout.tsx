@@ -15,6 +15,7 @@ import "react-native-reanimated";
 
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Text, View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,9 +45,36 @@ export default function RootLayout() {
           options={{
             drawerLabel: "Home",
             title: "Home",
+            headerRight: () => (
+              <View
+                style={{
+                  paddingRight: 20,
+                  paddingBottom: 5,
+                  paddingTop: 2,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#FFFFFF",
+                    backgroundColor: "#1a2639",
+                    padding: 9,
+                    borderRadius: 14,
+                    fontSize: 16,
+                    textAlign: "center",
+                  }}
+                >
+                  $5.00
+                </Text>
+              </View>
+            ),
+            headerTitle: "", //empty rakha he
+            headerStyle: {
+              backgroundColor: "#175E96",
+              height: 100,
+            },
             drawerIcon: ({ color, size }: any) => (
               <MaterialCommunityIcons
-                name="tablet-dashboard"
+                name="home"
                 size={size}
                 color="#fff"
               />
@@ -55,59 +83,26 @@ export default function RootLayout() {
             drawerLabelStyle: { color: "white" },
           }}
         />
-        <Drawer.Screen
-          name="(paySlip)"
-          options={{
-            drawerLabel: "Pay Slip",
-            title: "Pay Slip",
-            drawerIcon: ({ color, size }: any) => (
-              <Ionicons name="document-text" size={size} color="#fff" />
-            ),
-            drawerItemStyle: { backgroundColor: "#175E96" },
-            drawerLabelStyle: { color: "white" },
-          }}
-        />
-        <Drawer.Screen
-          name="(myTask)"
-          options={{
-            drawerLabel: "My Task",
-            title: "Assigned Tasks",
-            drawerIcon: ({ color, size }: any) => (
-              <MaterialIcons name="add-task" size={size} color="#fff" />
-            ),
-            drawerItemStyle: { backgroundColor: "#175E96" },
-            drawerLabelStyle: { color: "white" },
-          }}
-        />
+        
+        
         <Drawer.Screen
           name="(markAttendance)"
           options={{
-            drawerLabel: "Mark Attendance",
-            title: "Attendance",
+            drawerLabel: "Location",
+            title: "Map",
             drawerIcon: ({ color, size }: any) => (
-              <FontAwesome5 name="marker" size={size} color="#fff" />
+              <FontAwesome5 name="map-marked-alt" size={size} color="#fff" />
             ),
             drawerItemStyle: { backgroundColor: "#175E96" },
             drawerLabelStyle: { color: "white" },
           }}
         />
-        <Drawer.Screen
-          name="(attendanceReport)"
-          options={{
-            drawerLabel: "Attendance Report",
-            title: "Attendance Report",
-            drawerIcon: ({ color, size }: any) => (
-              <Entypo name="area-graph" size={size} color="#fff" />
-            ),
-            drawerItemStyle: { backgroundColor: "#175E96" },
-            drawerLabelStyle: { color: "white" },
-          }}
-        />
+        
 
         <Drawer.Screen
           name="(request)"
           options={{
-            drawerLabel: "Request",
+            drawerLabel: "Profile", // is page pr profile ka work kr sakte ho
             title: "Request",
             drawerIcon: ({ color, size }: any) => (
               <FontAwesome6 name="user-clock" size={size} color="#fff" />

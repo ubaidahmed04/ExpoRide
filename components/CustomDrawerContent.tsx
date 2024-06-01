@@ -28,9 +28,9 @@ export default function CustomDrawer(props: any) {
             }}
             style={styles.profileImage}
           />
-          <Text style={styles.profileTitle}>John Doe</Text>
+          <Text style={styles.profileTitle}>Ubaid & Sharjeel</Text>
           <Text style={styles.profileBio}>
-            Software Developer at Nubit Software
+            FrontEnd Developer 
           </Text>
         </View>
         {/* Drawer items */}
