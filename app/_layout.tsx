@@ -43,7 +43,7 @@ export default function RootLayout() {
         <Drawer.Screen
           name="index"
           options={{
-            drawerLabel: "Home",
+            drawerLabel: "Sharjeel Bhai",
             title: "Home",
             headerRight: () => (
               <View
@@ -88,7 +88,7 @@ export default function RootLayout() {
         <Drawer.Screen
           name="(markAttendance)"
           options={{
-            drawerLabel: "Location",
+            drawerLabel: "Ubaid bhai",
             title: "Map",
             drawerIcon: ({ color, size }: any) => (
               <FontAwesome5 name="map-marked-alt" size={size} color="#fff" />
@@ -97,28 +97,8 @@ export default function RootLayout() {
             drawerLabelStyle: { color: "white" },
           }}
         />
-        
 
-        <Drawer.Screen
-          name="(request)"
-          options={{
-            drawerLabel: "Profile", // is page pr profile ka work kr sakte ho
-            title: "Request",
-            drawerIcon: ({ color, size }: any) => (
-              <FontAwesome6 name="user-clock" size={size} color="#fff" />
-            ),
-            drawerItemStyle: { backgroundColor: "#175E96" },
-            drawerLabelStyle: { color: "white" },
-          }}
-        />
-
-        <Drawer.Screen
-          name="(attendanceReport)/scanMe" // This is the name of the page and must match the url from root
-          options={{
-            drawerLabel: "scan",
-            title: "overview",
-          }}
-        />
+       
       </Drawer>
     </GestureHandlerRootView>
   );

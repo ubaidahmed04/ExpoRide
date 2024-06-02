@@ -48,12 +48,12 @@ export default function CustomDrawer(props: any) {
           />
           <Text style={styles.signOutBtnText}>Sign Out</Text>
         </TouchableOpacity>
-        <Image
+        {/* <Image
           source={{
             uri: "https://www.softwaredoit.es/logotipos/nubit-consulting.jpg?t=2023-03-29_15_43_10",
           }}
           style={styles.bottomImage}
-        />
+        /> */}
       </View>
     </View>
   );
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     paddingTop: 6,
   },
   profileImage: {
+    borderRadius: 200,
     width: 120,
     height: 120,
   },

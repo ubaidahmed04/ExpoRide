@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
       justifyContent:"flex-start",
       alignItems:"flex-start",
       // marginTop:15,   
+      paddingHorizontal:14,
     },
     text:{
       fontSize:15,
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#F6F6F6',
     },
     bold:{
-        fontSize:23,
+        fontSize:18,
         fontWeight:"bold",
         marginTop:9,
 

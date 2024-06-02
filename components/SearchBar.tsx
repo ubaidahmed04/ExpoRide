@@ -47,7 +47,7 @@ const SearchBar = () => {
           style={styles.input}
         />
         <MaterialCommunityIcons
-          name={iconValue} // work kr rha he but i thk=nk Datatype use nh ki he is kye ye error indicate kr rha he
+          name={"motorbike"} 
           size={30}
           color="#7F9DF1"
           style={styles.icon}

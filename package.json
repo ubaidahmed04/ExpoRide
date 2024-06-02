@@ -41,7 +41,8 @@
     "react-native-screens": "3.31.1",
     "react-native-table-component": "^1.2.2",
     "react-native-web": "~0.19.10",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "expo-updates": "~0.25.15"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
