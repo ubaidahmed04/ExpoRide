@@ -35,7 +35,7 @@ const SearchBar = () => {
         />
         <MaterialCommunityIcons
           name="map-marker-outline"
-          size={24}
+          size={30}
           color="#7F9DF1"
           style={styles.icon}
         />
@@ -47,7 +47,7 @@ const SearchBar = () => {
           style={styles.input}
         />
         <MaterialCommunityIcons
-          name={"motorbike"} 
+          name={"motorbike"}
           size={30}
           color="#7F9DF1"
           style={styles.icon}
@@ -102,8 +102,8 @@ const SearchBar = () => {
       <SearchCard title={"Hussainabad"} />
       <SearchCard title={"Bahadurabad"} />
       <SearchCard title={"Nazimabad"} />
-      <SearchCard title={"Model"} />
       <SearchCard title={"Clifton"} />
+      <SearchCard title={"Model"} />
       <View style={styles.bottomNav}>
         <View>
           <TouchableOpacity onPress={handleGoBack}>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   input: {
-    width: 320,
+    width: 300,
     height: 60,
     borderRadius: 9,
     padding: 9,
@@ -140,13 +140,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     color: "#AEAEAE",
-    // marginBottom:16,
     marginLeft: 10,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    // borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -174,13 +172,13 @@ const styles = StyleSheet.create({
   bottomBtn: {
     // backgroundColor: "#175E96",
     padding: 10,
-    borderRadius:7
+    borderRadius: 7,
   },
-  buttonText:{
-    color:"#FFFFFF",
-    fontSize:13,
-    fontWeight:"600",
-    letterSpacing:1,
-  }
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontWeight: "600",
+    letterSpacing: 1,
+  },
 });
 export default SearchBar;

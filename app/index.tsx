@@ -14,7 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
-import BottomCard from "@/components/BottomCard";
+import BottomCard from './../components/BottomCard';
 
 
 const defaultColor = "#20588F";
@@ -47,7 +47,7 @@ export default function DashboardScreen() {
               }}
               style={Styles.cardImage1}
             />
-        <Text style={Styles.cardText}>Ride</Text>
+        <Text style={Styles.cardText}>Ride go</Text>
       </View>
       <View>
         <Image
@@ -56,11 +56,16 @@ export default function DashboardScreen() {
           }}
           style={Styles.cardImage1}
         />
-        <Text style={Styles.cardText}>Ride</Text>
+        <Text style={Styles.cardText}>Food</Text>
       </View>
       
     </View>
-    <BottomCard/>
+    <Text style={Styles.text}>History</Text>
+
+    <BottomCard title={"Clifton"} description={"78500"}/>
+    <BottomCard title={"Nazimabad"} description={"43500"}/>
+    <BottomCard title={"Bahadurabad"} description={"34930"}/>
+    <BottomCard title={"Model"} description={"53783"}/>
     
   </ScrollView>
   );
@@ -74,22 +79,22 @@ const Styles =StyleSheet.create({
       fontSize:25,
       color:"#FFFFFF", 
       fontWeight:'bold',
-      paddingLeft:10,
+      paddingLeft:20,
       margin:2,
       paddingTop:20,
+      padding:9
   },
   titleText:{
       fontSize:15,
       color:"#FFFFFF", 
       fontWeight:'400',
-      paddingLeft:12,
+      paddingLeft:23,
       width:260,
   },
   headerBtn: {
       backgroundColor: '#1a2639',
       paddingVertical: 10,
       marginTop:20,
-      // paddingHorizontal: 10,
       borderRadius: 25,
       alignItems: 'center',
       width:190,
@@ -122,7 +127,15 @@ const Styles =StyleSheet.create({
     cardText: {
       textAlign: 'center',
       color: 'black',
-      fontWeight: 'bold'
-    }
+      fontWeight: 'bold',
+      marginTop:10
+    },
+    text:{
+      fontSize:15,
+      fontWeight:"bold",
+      color:"#AEAEAE",
+      marginBottom:16,
+      marginLeft:15,
+  },
 
 })

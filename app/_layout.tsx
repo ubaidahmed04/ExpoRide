@@ -43,7 +43,7 @@ export default function RootLayout() {
         <Drawer.Screen
           name="index"
           options={{
-            drawerLabel: "Sharjeel Bhai",
+            drawerLabel: "Home",
             title: "Home",
             headerRight: () => (
               <View
@@ -88,17 +88,15 @@ export default function RootLayout() {
         <Drawer.Screen
           name="(markAttendance)"
           options={{
-            drawerLabel: "Ubaid bhai",
+            drawerLabel: "Map",
             title: "Map",
             drawerIcon: ({ color, size }: any) => (
               <FontAwesome5 name="map-marked-alt" size={size} color="#fff" />
             ),
             drawerItemStyle: { backgroundColor: "#175E96" },
-            drawerLabelStyle: { color: "white" },
+            drawerLabelStyle: { color: "white", },
           }}
         />
-
-       
       </Drawer>
     </GestureHandlerRootView>
   );

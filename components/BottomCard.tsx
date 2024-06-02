@@ -3,30 +3,22 @@ import React from 'react'
 import { FontAwesome6 ,Ionicons,Entypo
 } from '@expo/vector-icons';
 
-export default function BottomCard() {
+// const SearchCard: React.FC<{ title: any }> = ({ title }) => {
+const BottomCard: React.FC<{ title: any,description:any }> = ({ title,description }) => {
   return (
     <View style={styles.container}>
-        <Text style={styles.text}>Go again</Text>
         <View  style={styles.card1}>
             <View style={{marginTop:18}}>
             <Entypo name="dribbble-with-circle" size={40} color="#c3c3c3" />
 
             </View>
         <View>
-            <Text style={styles.bold}>Work</Text>
-            <Text style={styles.light}>1024,Market Street</Text>
-        </View>
-        </View>
-        <View  style={styles.card2}>
-            <View style={{marginTop:18}}>
-            <Ionicons name="timer" size={40} color="#c3c3c3" />
-            </View>
-        <View>
-            <Text style={styles.bold}>burnsRoad Street</Text>
-            <Text style={styles.light}>Karachi</Text>
+            <Text style={styles.bold}>{title}</Text>
+            <Text style={styles.light}>{description}</Text>
         </View>
         </View>
        
+               
     </View>
   )
 }
@@ -39,20 +31,14 @@ const styles = StyleSheet.create({
       // marginTop:15,   
       paddingHorizontal:14,
     },
-    text:{
-      fontSize:15,
-      fontWeight:"bold",
-      color:"#AEAEAE",
-      // marginBottom:16,
-      marginLeft:10,
-  },
+    
     card1:{
       width:"100%",
       display:"flex",
       flexDirection:"row",
       alignItems:"center",
-    gap:9,
-      height:100,
+      gap:9,
+      height:70,
       borderBottomColor:"#c3c3c3",
       borderBottomWidth:.5,
     backgroundColor: '#F6F6F6',
@@ -82,3 +68,4 @@ const styles = StyleSheet.create({
     
 
 })
+export default BottomCard
