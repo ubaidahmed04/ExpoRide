@@ -40,7 +40,7 @@ export default function DashboardScreen() {
         <View style={{ marginBottom: 10 }}>
           <Image
             source={{
-              uri: "https://static.thenounproject.com/png/188680-200.png", // ye dono  image add ki front page ki he but show nh ho rhi ye dekh lena
+              uri: "https://www.shareicon.net/data/2015/06/12/53301_car_512x512.png", // ye dono  image add ki front page ki he but show nh ho rhi ye dekh lena
             }}
             style={Styles.cardImage1}
           />
@@ -49,7 +49,7 @@ export default function DashboardScreen() {
         <View>
           <Image
             source={{
-              uri: "https://cdn.pixabay.com/photo/2013/07/13/11/29/cherries-158241_1280.png",
+              uri: "https://static.vecteezy.com/system/resources/previews/019/607/567/non_2x/fast-food-vector-clipart-design-graphic-clipart-design-free-png.png",
             }}
             style={Styles.cardImage1}
           />
