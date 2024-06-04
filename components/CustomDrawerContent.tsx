@@ -6,16 +6,16 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/app/authContext";
 
 export default function CustomDrawer(props: any) {
   const navigation = useNavigation();
 
-  const handleSignOut = () => {
-    // Write logic for sign out here
-    navigation.dispatch(DrawerActions.closeDrawer());
-    console.log("Signing out...");
-  };
+  const { authState, onLogout } = useAuth();
+
+	const onLogoutPressed = () => {
+		onLogout!();
+	};
 
   return (
     <View style={{ flex: 1 }}>
@@ -39,7 +39,7 @@ export default function CustomDrawer(props: any) {
 
       <View style={styles.bottomContainer}>
         {/* Bottom content of drawer */}
-        <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
+        <TouchableOpacity style={styles.signOutBtn} onPress={onLogoutPressed}>
           <MaterialIcons
             name="logout"
             size={24}
