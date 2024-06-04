@@ -1,57 +1,161 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-  Button,
-} from "react-native";
-import React, { useState } from "react";
-import {
-  Ionicons,
-  Entypo,
-  MaterialCommunityIcons,
-  FontAwesome6,
-} from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { MaterialCommunityIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import SearchCard from "./SearchCard";
+import { Dropdown } from "react-native-element-dropdown";
+import API from "@/constants/Api";
+import { debounce } from "lodash";
 
 const SearchBar = () => {
   const navigation = useNavigation();
+
   const handleGoBack = () => {
     navigation.goBack();
   };
-  const [iconValue, setIconValue] = useState("motorbike");
-  // console.log(iconValue)
+
+  const [iconValue, setIconValue] = useState<any>("motorbike");
+  const [value, setValue] = useState<any>(null);
+  const [isFocus, setIsFocus] = useState(false);
+  const [searchLocationValue, setSearchLocationValue] = useState<string>(""); // value of text input inside of dropdown
+  const [destinationValue, setDestinationValue] = useState<any>(null);
+  const [isFocusedDestination, setIsFocusedDestination] = useState(false);
+  const [searchDestinationValue, setdestinationLocationValue] = useState<string>(""); // value of text input inside of dropdown
+  const [myRes, setMyRes] = useState<any>([]);
+  const [res, setRes] = useState<any>([]);
+
+  useEffect(() => {
+    const locationDelayedApi = debounce(async () => {
+      try {
+        const response = await API.getCode(searchLocationValue);
+        const result = await response.hits;
+        setMyRes(result.filter((v: any) => v.country == "Pakistan")); // filter by country pakistan
+      } catch (error) {
+        console.log(error);
+      }
+    }, 1000); // 1sec debounce delay
+    if (searchLocationValue.trim() != "") {
+      locationDelayedApi();
+    }
+    return locationDelayedApi.cancel;
+  }, [searchLocationValue]);
+
+  useEffect(() => {
+    const destinationDelayedApi = debounce(async () => {
+      try {
+        const response = await API.getCode(searchDestinationValue);
+        const result = await response.hits;
+        setRes(result.filter((v: any) => v.country == "Pakistan")); // filter by country pakistan
+      } catch (error) {
+        console.log(error);
+      }
+    }, 1000); // 1sec debounce delay
+    if (searchDestinationValue.trim() != "") {
+      destinationDelayedApi();
+    }
+    return destinationDelayedApi.cancel;
+  }, [searchDestinationValue]);
+
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return (
+        <Text style={[styles.label, isFocus && { color: "#175E96" }]}>
+          Location
+        </Text>
+      );
+    }
+    return null;
+  };
+
+  const renderLabel2 = () => {
+    if (value || isFocusedDestination) {
+      return (
+        <Text
+          style={[styles.label, isFocusedDestination && { color: "#175E96" }]}
+        >
+          Destination
+        </Text>
+      );
+    }
+    return null;
+  };
 
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="My location?"
-          placeholderTextColor="#175E96"
-          style={styles.input}
-        />
-        <MaterialCommunityIcons
-          name="map-marker-outline"
-          size={30}
-          color="#7F9DF1"
-          style={styles.icon}
-        />
+        <View style={styles.container}>
+          {renderLabel()}
+          <Dropdown
+            style={[styles.dropdown, isFocus && { borderColor: "#175E96" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={myRes}
+            search
+            maxHeight={300}
+            labelField="name"
+            valueField="_index"
+            placeholder={!isFocus ? "search your location" : "..."}
+            searchPlaceholder="Search..."
+            value={value}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={(item) => {
+              setValue(item);
+              setIsFocus(false);
+            }}
+            onChangeText={(text: any) => setSearchLocationValue(text)} // Update search value state
+            renderLeftIcon={() => (
+              <MaterialCommunityIcons
+                style={styles.iconDropdown}
+                color={isFocus ? "#175E96" : "black"}
+                name="map-marker-outline"
+                size={24}
+              />
+            )}
+          />
+        </View>
       </View>
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Where to?"
-          placeholderTextColor="#175E96"
-          style={styles.input}
-        />
-        <MaterialCommunityIcons
-          name={"motorbike"}
-          size={30}
-          color="#7F9DF1"
-          style={styles.icon}
-        />
+        <View style={styles.container}>
+          {renderLabel2()}
+          <Dropdown
+            style={[
+              styles.dropdown,
+              isFocusedDestination && { borderColor: "#175E96" },
+            ]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={res}
+            search
+            maxHeight={300}
+            labelField="name"
+            valueField="_index"
+            placeholder={
+              !isFocusedDestination ? "search your destination" : "..."
+            }
+            searchPlaceholder="Search..."
+            value={destinationValue}
+            onFocus={() => setIsFocusedDestination(true)}
+            onBlur={() => setIsFocusedDestination(false)}
+            onChange={(item) => {
+              setDestinationValue(item);
+              setIsFocusedDestination(false);
+            }}
+            onChangeText={(text: any) => setdestinationLocationValue(text)} // Update search value state
+            renderLeftIcon={() => (
+              <MaterialCommunityIcons
+                style={styles.iconDropdown}
+                color={isFocusedDestination ? "#175E96" : "black"}
+                name={iconValue}
+                size={24}
+              />
+            )}
+          />
+        </View>
       </View>
       <View style={styles.iconTab}>
         <TouchableOpacity
@@ -63,8 +167,8 @@ const SearchBar = () => {
             <MaterialCommunityIcons
               name="motorbike"
               size={40}
-              color="#7F9DF1"
-              style={styles.icon}
+              color={iconValue == "motorbike" ? "#175E96" : "#3e4a61"}
+              style={iconValue == "motorbike" && styles.icon}
             />
           </View>
         </TouchableOpacity>
@@ -78,8 +182,8 @@ const SearchBar = () => {
             <MaterialCommunityIcons
               name="car-side"
               size={40}
-              color="#7F9DF1"
-              style={styles.icon}
+              color={iconValue == "car-side" ? "#175E96" : "#3e4a61"}
+              style={iconValue == "car-side" && styles.icon}
             />
           </View>
         </TouchableOpacity>
@@ -93,8 +197,8 @@ const SearchBar = () => {
             <MaterialCommunityIcons
               name="rickshaw"
               size={40}
-              color="#7F9DF1"
-              style={styles.icon}
+              color={iconValue == "rickshaw" ? "#175E96" : "#3e4a61"}
+              style={iconValue == "rickshaw" && styles.icon}
             />
           </View>
         </TouchableOpacity>
@@ -128,13 +232,12 @@ const styles = StyleSheet.create({
   main: {
     display: "flex",
     alignItems: "center",
-    gap: 10,
+    // gap: 10,
   },
   input: {
     width: "100%",
     height: 60,
     borderRadius: 9,
-    padding: 9,
   },
   text: {
     fontSize: 15,
@@ -145,14 +248,16 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 8,
-    marginVertical: 5,
+    // borderWidth: 1,
+    // borderRadius: 5,
+    // paddingHorizontal: 18,
+    // marginVertical: 5,
   },
   icon: {
-    marginRight: 10,
-    color: "#3e4a61",
+    padding: 4,
+    backgroundColor: "#175E96",
+    color: "#e5efff",
+    borderRadius: 50,
   },
   iconTab: {
     width: "100%",
@@ -178,6 +283,45 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     letterSpacing: 1,
+  },
+
+  container: {
+    backgroundColor: "white",
+    padding: 16,
+    width: "100%",
+  },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  iconDropdown: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
 export default SearchBar;
