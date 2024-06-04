@@ -15,7 +15,7 @@ import SearchBar from "@/components/SearchBar";
 
 export default function ScanQr() {
   return (
-    <ScrollView  style={{paddingHorizontal: 10}}>
+    <ScrollView >
       <SearchBar />
     </ScrollView>
   );
