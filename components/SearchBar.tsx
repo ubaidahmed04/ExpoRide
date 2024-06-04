@@ -26,10 +26,10 @@ const SearchBar = () => {
   // console.log(iconValue)
 
   return (
-    <View style={styles.inputDiv}>
+    <View style={styles.main}>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Where to?"
+          placeholder="My location?"
           placeholderTextColor="#175E96"
           style={styles.input}
         />
@@ -125,13 +125,13 @@ const SearchBar = () => {
   );
 };
 const styles = StyleSheet.create({
-  inputDiv: {
+  main: {
     display: "flex",
     alignItems: "center",
     gap: 10,
   },
   input: {
-    width: 300,
+    width: "100%",
     height: 60,
     borderRadius: 9,
     padding: 9,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     marginVertical: 5,
   },
   icon: {
@@ -155,22 +155,21 @@ const styles = StyleSheet.create({
     color: "#3e4a61",
   },
   iconTab: {
+    width: "100%",
     backgroundColor: "#FFFFFF",
     display: "flex",
     flexDirection: "row",
-    gap: 100,
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
-    padding: 20,
+    paddingVertical: 20,
   },
   bottomNav: {
+    width: "100%",
     display: "flex",
     flexDirection: "row",
-    gap: 220,
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
   bottomBtn: {
-    // backgroundColor: "#175E96",
     padding: 10,
     borderRadius: 7,
   },

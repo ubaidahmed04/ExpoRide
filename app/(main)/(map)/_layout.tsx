@@ -14,7 +14,7 @@ export default function HomeLayout() {
       }}
     />
     <Tabs.Screen
-      name="(scanQr)"
+      name="(location)"
       options={{
         title: 'Location',
         headerShown:false,

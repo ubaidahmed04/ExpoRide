@@ -32,10 +32,8 @@ export default function MarkAttendance() {
       </MapView>
 
       <View style={styles.Movebutton}>
-        <Link style={styles.button} href="/(scanQr)">
-          <FontAwesome6 name="arrow-trend-up" size={40}  />
-             
-            
+        <Link style={styles.button} href="/(location)">
+          <FontAwesome6 name="arrow-trend-up" size={40} />
         </Link>
       </View>
     </View>
@@ -60,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     elevation: 3,
     backgroundColor: "#FFFFFF",
-    color:"#175E96"
+    color: "#175E96",
   },
   text: {
     fontSize: 18,
@@ -68,8 +66,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "white",
   },
-  Movebutton:{
-    bottom:60,
-    left:110,
-  }
+  Movebutton: {
+    bottom: 60,
+    left: 110,
+  },
 });
