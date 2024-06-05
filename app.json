@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/spla.webp",
+      "image": "./assets/images/splashBike.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
