@@ -26,7 +26,7 @@ export default function DashboardScreen() {
   // };
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: "#fff"}}>
       <View style={Styles.Header}>
         <Text style={Styles.headText}>Try local Favourate</Text>
         <Text style={Styles.titleText}>

@@ -28,6 +28,30 @@ const API = {
       throw error;
     }
   },
+  getRoutes: async (body: any) => {
+    console.log("body", body);
+    try {
+      const apiUrlWithParams = `https://graphhopper.com/api/1/route?key=d209595b-8719-452e-b9d7-2d3e9d4a0384`;
+  
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      };
+  
+      const response = await fetch(apiUrlWithParams, fetchOptions);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  },
 };
 
 export default API;

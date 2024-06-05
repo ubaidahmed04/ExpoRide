@@ -39,6 +39,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
         drawerContent={(props): any => <CustomDrawerContent {...props} />}
+        screenOptions={{
+          headerRight: ({ color, size }:any) => <MaterialCommunityIcons name="forwardburger" size={32} color={color} />
+        }}
       >
         <Drawer.Screen
           name="index"

@@ -1,16 +1,11 @@
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  Text,
-  View,
-  Button,
-  Pressable,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Button, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { debounce } from "lodash";
+import API from "@/constants/Api";
 
 export default function MarkAttendance() {
   const navigation = useNavigation();
@@ -21,6 +16,40 @@ export default function MarkAttendance() {
     longitudeDelta: 0.0421,
   };
 
+  let body = {
+    points: [
+      [66.9939479, 24.9502446],
+      [67.0227543, 24.9320564],
+    ],
+    profile: "car",
+    elevation: true,
+    instructions: true,
+    locale: "en_US",
+    points_encoded: true,
+    points_encoded_multiplier: 1000000,
+    snap_preventions: ["ferry"],
+    details: [
+      "road_class",
+      "road_environment",
+      "road_access",
+      "surface",
+      "max_speed",
+      "average_speed",
+      "toll",
+      "track_type",
+      "country",
+    ],
+  };
+
+  const locationDelayedApi = debounce(async () => { // route api
+    try {
+      const response = await API.getRoutes(body);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }, 1000);
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
@@ -30,7 +59,6 @@ export default function MarkAttendance() {
           description="Marker Description"
         />
       </MapView>
-
       <View style={styles.Movebutton}>
         <Link style={styles.button} href="/(location)">
           <FontAwesome6 name="arrow-trend-up" size={40} />

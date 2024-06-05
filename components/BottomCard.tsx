@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
       display:"flex",
       justifyContent:"flex-start",
       alignItems:"flex-start",
-      // marginTop:15,   
       paddingHorizontal:14,
     },
     
@@ -40,8 +39,7 @@ const styles = StyleSheet.create({
       gap:9,
       height:70,
       borderBottomColor:"#c3c3c3",
-      borderBottomWidth:.5,
-    backgroundColor: '#F6F6F6',
+      borderBottomWidth: 0.5,
     },
     card2:{
         width:"100%",
