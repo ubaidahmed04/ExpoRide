@@ -1,13 +1,24 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { MaterialCommunityIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import SearchCard from "./SearchCard";
 import { Dropdown } from "react-native-element-dropdown";
 import API from "@/constants/Api";
 import { debounce } from "lodash";
+import { GlobalContext } from "@/app/(main)/globalContext";
 
 const SearchBar = () => {
+  const { state, updateFirstLocation, updateSecondLocation } =
+    useContext(GlobalContext);
+
+  const handleMyLocationData = (data: any) => {
+    updateFirstLocation(data);
+  };
+  const handleSecondLocationdata = (data: any) => {
+    updateSecondLocation(data);
+  };
+
   const navigation = useNavigation();
 
   const handleGoBack = () => {
@@ -17,19 +28,29 @@ const SearchBar = () => {
   const [iconValue, setIconValue] = useState<any>("motorbike");
   const [value, setValue] = useState<any>(null);
   const [isFocus, setIsFocus] = useState(false);
-  const [searchLocationValue, setSearchLocationValue] = useState<string>(""); // value of text input inside of dropdown
+  const [searchLocationValue, setSearchLocationValue] = useState<string>("");
   const [destinationValue, setDestinationValue] = useState<any>(null);
   const [isFocusedDestination, setIsFocusedDestination] = useState(false);
-  const [searchDestinationValue, setdestinationLocationValue] = useState<string>(""); // value of text input inside of dropdown
+  const [searchDestinationValue, setdestinationLocationValue] =
+    useState<string>("");
   const [myRes, setMyRes] = useState<any>([]);
   const [res, setRes] = useState<any>([]);
+
+  useEffect(() => {
+    if (value != null) {
+      handleMyLocationData(value);
+    }
+    if (destinationValue != null) {
+      handleSecondLocationdata(destinationValue);
+    }
+  }, [value, destinationValue]);
 
   useEffect(() => {
     const locationDelayedApi = debounce(async () => {
       try {
         const response = await API.getCode(searchLocationValue);
         const result = await response.hits;
-        setMyRes(result.filter((v: any) => v.country == "Pakistan")); // filter by country pakistan
+        setMyRes(result.filter((v: any) => v.country == "Pakistan"));
       } catch (error) {
         console.log(error);
       }
@@ -45,7 +66,7 @@ const SearchBar = () => {
       try {
         const response = await API.getCode(searchDestinationValue);
         const result = await response.hits;
-        setRes(result.filter((v: any) => v.country == "Pakistan")); // filter by country pakistan
+        setRes(result.filter((v: any) => v.country == "Pakistan"));
       } catch (error) {
         console.log(error);
       }

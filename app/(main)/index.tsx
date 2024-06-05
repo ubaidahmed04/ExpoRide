@@ -26,9 +26,9 @@ export default function DashboardScreen() {
   // };
 
   return (
-    <ScrollView style={{backgroundColor: "#fff"}}>
+    <ScrollView style={{ backgroundColor: "#fff" }}>
       <View style={Styles.Header}>
-        <Text style={Styles.headText}>Try local Favourate</Text>
+        <Text style={Styles.headText}>Try local Favourite</Text>
         <Text style={Styles.titleText}>
           Local Resturant are open with delivering with Uber Eats
         </Text>
@@ -37,24 +37,28 @@ export default function DashboardScreen() {
         </TouchableOpacity>
       </View>
       <View style={Styles.ImageDiv}>
-        <View style={{ marginBottom: 10 }}>
-          <Image
-            source={{
-              uri: "https://www.shareicon.net/data/2015/06/12/53301_car_512x512.png", // ye dono  image add ki front page ki he but show nh ho rhi ye dekh lena
-            }}
-            style={Styles.cardImage1}
-          />
-          <Text style={Styles.cardText}>Ride go</Text>
-        </View>
-        <View>
-          <Image
-            source={{
-              uri: "https://static.vecteezy.com/system/resources/previews/019/607/567/non_2x/fast-food-vector-clipart-design-graphic-clipart-design-free-png.png",
-            }}
-            style={Styles.cardImage1}
-          />
-          <Text style={Styles.cardText}>Food</Text>
-        </View>
+        <Link href={"/(map)/(location)"}>
+          <View style={{ marginBottom: 10 }}>
+            <Image
+              source={{
+                uri: "https://www.shareicon.net/data/2015/06/12/53301_car_512x512.png", // ye dono  image add ki front page ki he but show nh ho rhi ye dekh lena
+              }}
+              style={Styles.cardImage1}
+            />
+            <Text style={Styles.cardText}>Ride go</Text>
+          </View>
+        </Link>
+        <Link href={"/(map)/(location)"}>
+          <View>
+            <Image
+              source={{
+                uri: "https://static.vecteezy.com/system/resources/previews/019/607/567/non_2x/fast-food-vector-clipart-design-graphic-clipart-design-free-png.png",
+              }}
+              style={Styles.cardImage1}
+            />
+            <Text style={Styles.cardText}>Food</Text>
+          </View>
+        </Link>
       </View>
       <Text style={Styles.text}>History</Text>
 

@@ -12,8 +12,8 @@ import {
 import { CameraView, useCameraPermissions } from "expo-camera";
 import Animated, { Easing } from "react-native-reanimated"; // or 'react-native'
 import SearchBar from "@/components/SearchBar";
+export default function Location() {
 
-export default function ScanQr() {
   return (
     <ScrollView >
       <SearchBar />

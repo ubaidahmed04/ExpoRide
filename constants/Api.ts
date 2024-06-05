@@ -29,7 +29,7 @@ const API = {
     }
   },
   getRoutes: async (body: any) => {
-    console.log("body", body);
+
     try {
       const apiUrlWithParams = `https://graphhopper.com/api/1/route?key=d209595b-8719-452e-b9d7-2d3e9d4a0384`;
   
