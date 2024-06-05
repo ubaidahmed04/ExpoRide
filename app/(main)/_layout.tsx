@@ -10,7 +10,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-
+import { GlobalProvider } from "./globalContext";
 import "react-native-reanimated";
 
 import CustomDrawerContent from "@/components/CustomDrawerContent";
@@ -36,64 +36,66 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
-        drawerContent={(props): any => <CustomDrawerContent {...props} />}
-      >
-        <Drawer.Screen
-          name="index"
-          options={{
-            drawerLabel: "Home",
-            title: "Home",
-            headerRight: () => (
-              <View
-                style={{
-                  paddingRight: 20,
-                  paddingBottom: 5,
-                  paddingTop: 2,
-                }}
-              >
-                <Text
+    <GlobalProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Drawer
+          drawerContent={(props): any => <CustomDrawerContent {...props} />}
+        >
+          <Drawer.Screen
+            name="index"
+            options={{
+              drawerLabel: "Home",
+              title: "Home",
+              headerRight: () => (
+                <View
                   style={{
-                    color: "#FFFFFF",
-                    backgroundColor: "#1a2639",
-                    padding: 9,
-                    borderRadius: 14,
-                    fontSize: 16,
-                    textAlign: "center",
+                    paddingRight: 20,
+                    paddingBottom: 5,
+                    paddingTop: 2,
                   }}
                 >
-                  $5.00
-                </Text>
-              </View>
-            ),
-            headerTitle: "", //empty rakha he
-            headerStyle: {
-              backgroundColor: "#175E96",
-              height: 100,
-            },
-            drawerIcon: ({ color, size }: any) => (
-              <MaterialCommunityIcons name="home" size={size} color={color} />
-            ),
-            drawerActiveBackgroundColor: "#175E96",
-            drawerActiveTintColor: "#fff",
-          }}
-        />
+                  <Text
+                    style={{
+                      color: "#FFFFFF",
+                      backgroundColor: "#1a2639",
+                      padding: 9,
+                      borderRadius: 14,
+                      fontSize: 16,
+                      textAlign: "center",
+                    }}
+                  >
+                    $5.00
+                  </Text>
+                </View>
+              ),
+              headerTitle: "", //empty rakha he
+              headerStyle: {
+                backgroundColor: "#175E96",
+                height: 100,
+              },
+              drawerIcon: ({ color, size }: any) => (
+                <MaterialCommunityIcons name="home" size={size} color={color} />
+              ),
+              drawerActiveBackgroundColor: "#175E96",
+              drawerActiveTintColor: "#fff",
+            }}
+          />
 
-        <Drawer.Screen
-          name="(map)"
-          options={{
-            drawerLabel: "Map",
-            title: "Map",
-            drawerIcon: ({ color, size }: any) => (
-              <FontAwesome5 name="map-marked-alt" size={size} color={color} />
-            ),
-            drawerActiveBackgroundColor: "#175E96",
-            drawerActiveTintColor: "#fff",
-          }}
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+          <Drawer.Screen
+            name="(map)"
+            options={{
+              drawerLabel: "Map",
+              title: "Map",
+              drawerIcon: ({ color, size }: any) => (
+                <FontAwesome5 name="map-marked-alt" size={size} color={color} />
+              ),
+              drawerActiveBackgroundColor: "#175E96",
+              drawerActiveTintColor: "#fff",
+            }}
+          />
+        </Drawer>
+      </GestureHandlerRootView>
+    </GlobalProvider>
   );
 }
 

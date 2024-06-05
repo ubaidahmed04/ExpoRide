@@ -28,9 +28,9 @@ const Page = () => {
 		>
 			<View>
 			<Image
-            source={{
-              uri: "https://static.vecteezy.com/system/resources/previews/006/960/543/original/electric-bike-motorcycle-and-route-icon-on-white-free-vector.jpg", 
-            }}
+            source={
+				require( "./../assets/images/loginIcon.png") 
+            }
             style={styles.avatar}
           />
 			</View>
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 		marginVertical: 25,
 		// marginHorizontal:50,
 		alignItems: 'center',
-		backgroundColor: '#53A5F8',
+		backgroundColor: '#175E96',
 		padding: 12,
 		borderRadius: 10
 	}
