@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
 import { Polyline } from "react-native-maps";
@@ -39,23 +38,17 @@ function decodePolyline(encoded: string) {
     let dlng = result & 1 ? ~(result >> 1) : result >> 1;
     lng += dlng;
 
-    points.push([lat * 1e-5, lng * 1e-5]);
+    points.push({ latitude: lat * 1e-5, longitude: lng * 1e-5 });
   }
 
   return points;
 }
 
-// Example usage
-// const encodedString = "cbhwCmw{wK_@Hg@gBNMjIyBFk@LeBBk@HiBTsCEaCT_Av@eBZ_@x@}BzCdBtBwFpA_Dq@i@\\gAXk@tByEe@{@Cw@@UD?p@c@dA{@NJv@kBzG}NzEuK~BkFzEoK`HwO|AiDJ_@AWSU{C{Bc@e@Mk@Go@?]d@_Ct@_DjATlBf@A^Fo@F_@DQNWnEaEDYr@uAHMBARW@St@yA@MAGCE?C?IP[bBkBNPD?BAz@o@d@Yr@W~GbKnArBv@L|IdA@Jr@cB[IaI{@GEGMASPsBFMJEk@u@";
-// const routePoints = decodePolyline(encodedString);
-// console.log(routePoints);
-
 export default function MarkAttendance() {
   const [poly, setPoly] = useState<any>(null);
   const [res, setRes] = useState<any>(null);
   const { state } = useContext(GlobalContext);
-  let routeRes;
-  const navigation = useNavigation();
+
   const initialRegion = {
     latitude: 37.78825,
     longitude: -122.4324,
@@ -63,60 +56,16 @@ export default function MarkAttendance() {
     longitudeDelta: 0.0421,
   };
 
-  let body = {
-    points: [
-      [66.9939479, 24.9502446],
-      [67.0227543, 24.9320564],
-    ],
-    profile: "car",
-    elevation: true,
-    instructions: true,
-    locale: "en_US",
-    points_encoded: true,
-    points_encoded_multiplier: 1000000,
-    snap_preventions: ["ferry"],
-    details: [
-      "road_class",
-      "road_environment",
-      "road_access",
-      "surface",
-      "max_speed",
-      "average_speed",
-      "toll",
-      "track_type",
-      "country",
-    ],
-  };
-
   const locationDelayedApi = debounce(
     async (mylocation: any, destination: any) => {
-      // route api
-      let body = {
-        points: [
-          [mylocation["point"]["lng"], mylocation["point"]["lat"]],
-          [destination["point"]["lng"], destination["point"]["lat"]],
-        ],
-        profile: "car",
-        elevation: true,
-        instructions: true,
-        locale: "en_US",
-        points_encoded: true,
-        points_encoded_multiplier: 1000000,
-        snap_preventions: ["ferry"],
-        details: [
-          "road_class",
-          "road_environment",
-          "road_access",
-          "surface",
-          "max_speed",
-          "average_speed",
-          "toll",
-          "track_type",
-          "country",
-        ],
+      let obj = {
+        point_1: mylocation["point"]["lng"] + "," + mylocation["point"]["lat"],
+        point_2:
+          destination["point"]["lng"] + "," + destination["point"]["lat"],
       };
+
       try {
-        const response = await API.getRoutes(body);
+        const response = await API.getRoutes(obj);
         setRes(response);
         // routeRes = response;
       } catch (error) {
@@ -125,29 +74,21 @@ export default function MarkAttendance() {
     },
     1000
   );
-
+  
   useEffect(() => {
     locationDelayedApi(state["firstLocation"], state["secondLocation"]);
   }, [state]);
 
-  let istrue = false;
-
   useEffect(() => {
-    if (!istrue) {
-      istrue = true;
-      return;
-    }
-    const points = (res && res["paths"])?.map((v: any) => v.points)[0];
-    if (points.trim() != "") {
-      const arr = decodePolyline(points);
-      setPoly(arr);
-      console.log(arr)
+    if (res) {
+      const points = (res && res["paths"])?.map((v: any) => v.points)[0];
+      if (points.trim() != "") {
+        const arr = decodePolyline(points);
+        setPoly(arr);
+      }
     }
   }, [res]);
-
-  // const points = (res && res["paths"])?.map((v:any)=>v.points)[0]
-
-  // console.log("Here is the points",points)
+  
 
   return (
     <View style={styles.container}>
@@ -173,11 +114,9 @@ export default function MarkAttendance() {
             description="Marker Description"
           />
         )}
-        {
-Array.isArray(poly) && poly.length>0 && (
-<Polyline coordinates={poly} strokeWidth={5} strokeColor="red" />
-)
-}
+        {poly && poly.length > 0 && (
+          <Polyline coordinates={poly} strokeWidth={5} strokeColor="red" />
+        )}
       </MapView>
       <View style={styles.Movebutton}>
         <Link style={styles.button} href="/(location)">
