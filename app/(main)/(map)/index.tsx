@@ -9,10 +9,52 @@ import { debounce } from "lodash";
 import API from "@/constants/Api";
 import { GlobalContext } from "../globalContext";
 
-export default function MarkAttendance() {
+function decodePolyline(encoded: string) {
+  // console.log("decode func")
+  let points = [];
+  let index = 0,
+    len = encoded.length;
+  let lat = 0,
+    lng = 0;
 
-  const [poly, setPoly] = useState<any>(null)
+  while (index < len) {
+    let b,
+      shift = 0,
+      result = 0;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    let dlat = result & 1 ? ~(result >> 1) : result >> 1;
+    lat += dlat;
+
+    shift = 0;
+    result = 0;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    let dlng = result & 1 ? ~(result >> 1) : result >> 1;
+    lng += dlng;
+
+    points.push([lat * 1e-5, lng * 1e-5]);
+  }
+
+  return points;
+}
+
+// Example usage
+// const encodedString = "cbhwCmw{wK_@Hg@gBNMjIyBFk@LeBBk@HiBTsCEaCT_Av@eBZ_@x@}BzCdBtBwFpA_Dq@i@\\gAXk@tByEe@{@Cw@@UD?p@c@dA{@NJv@kBzG}NzEuK~BkFzEoK`HwO|AiDJ_@AWSU{C{Bc@e@Mk@Go@?]d@_Ct@_DjATlBf@A^Fo@F_@DQNWnEaEDYr@uAHMBARW@St@yA@MAGCE?C?IP[bBkBNPD?BAz@o@d@Yr@W~GbKnArBv@L|IdA@Jr@cB[IaI{@GEGMASPsBFMJEk@u@";
+// const routePoints = decodePolyline(encodedString);
+// console.log(routePoints);
+
+export default function MarkAttendance() {
+  const [poly, setPoly] = useState<any>(null);
+  const [res, setRes] = useState<any>(null);
   const { state } = useContext(GlobalContext);
+  let routeRes;
   const navigation = useNavigation();
   const initialRegion = {
     latitude: 37.78825,
@@ -46,74 +88,96 @@ export default function MarkAttendance() {
     ],
   };
 
-  const locationDelayedApi = debounce(async (mylocation: any, destination: any) => {
-    // route api
-    let body = {
-      points: [
-        [mylocation["point"]["lng"], mylocation["point"]["lat"]],
-        [destination["point"]["lng"], destination["point"]["lat"]],
-      ],
-      profile: "car",
-      elevation: true,
-      instructions: true,
-      locale: "en_US",
-      points_encoded: true,
-      points_encoded_multiplier: 1000000,
-      snap_preventions: ["ferry"],
-      details: [
-        "road_class",
-        "road_environment",
-        "road_access",
-        "surface",
-        "max_speed",
-        "average_speed",
-        "toll",
-        "track_type",
-        "country",
-      ],
-    };
-    try {
-      const response = await API.getRoutes(body);
-      setPoly(response)
-    } catch (error) {
-      console.log(error);
-    }
-  }, 1000);
+  const locationDelayedApi = debounce(
+    async (mylocation: any, destination: any) => {
+      // route api
+      let body = {
+        points: [
+          [mylocation["point"]["lng"], mylocation["point"]["lat"]],
+          [destination["point"]["lng"], destination["point"]["lat"]],
+        ],
+        profile: "car",
+        elevation: true,
+        instructions: true,
+        locale: "en_US",
+        points_encoded: true,
+        points_encoded_multiplier: 1000000,
+        snap_preventions: ["ferry"],
+        details: [
+          "road_class",
+          "road_environment",
+          "road_access",
+          "surface",
+          "max_speed",
+          "average_speed",
+          "toll",
+          "track_type",
+          "country",
+        ],
+      };
+      try {
+        const response = await API.getRoutes(body);
+        setRes(response);
+        // routeRes = response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    1000
+  );
 
   useEffect(() => {
-    locationDelayedApi(state["firstLocation"], state["secondLocation"])
-    
-  }, [state])
-  
-  let points = poly && poly["paths"][0]
+    locationDelayedApi(state["firstLocation"], state["secondLocation"]);
+  }, [state]);
 
-  console.log(points)
-  
+  let istrue = false;
+
+  useEffect(() => {
+    if (!istrue) {
+      istrue = true;
+      return;
+    }
+    const points = (res && res["paths"])?.map((v: any) => v.points)[0];
+    if (points.trim() != "") {
+      const arr = decodePolyline(points);
+      setPoly(arr);
+      console.log(arr)
+    }
+  }, [res]);
+
+  // const points = (res && res["paths"])?.map((v:any)=>v.points)[0]
+
+  // console.log("Here is the points",points)
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
-        {
-          state["firstLocation"] && <Marker
-          coordinate={{
-            latitude: state.firstLocation?.point?.lat,
-            longitude: state.firstLocation?.point?.lng,
-          }}
-          title="Marker Title"
-          description="Marker Description"
-        />
-        }
-        {
-          state["secondLocation"] && <Marker
-          coordinate={{
-            latitude: state.secondLocation?.point?.lat,
-            longitude: state.secondLocation?.point?.lng,
-          }}
-          title="Marker Title"
-          description="Marker Description"
-        />
-        }
+        {state["firstLocation"] && (
+          <Marker
+            coordinate={{
+              latitude: state.firstLocation?.point?.lat,
+              longitude: state.firstLocation?.point?.lng,
+            }}
+            title="Marker Title"
+            description="Marker Description"
+          />
+        )}
 
+        {state["secondLocation"] && (
+          <Marker
+            coordinate={{
+              latitude: state.secondLocation?.point?.lat,
+              longitude: state.secondLocation?.point?.lng,
+            }}
+            title="Marker Title"
+            description="Marker Description"
+          />
+        )}
+        {
+Array.isArray(poly) && poly.length>0 && (
+<Polyline coordinates={poly} strokeWidth={5} strokeColor="red" />
+)
+}
       </MapView>
       <View style={styles.Movebutton}>
         <Link style={styles.button} href="/(location)">

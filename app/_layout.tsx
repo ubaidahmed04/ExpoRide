@@ -12,7 +12,7 @@ const StackLayout = () => {
 
     if (!authState?.authenticated && inAuthGroup) {
       router.replace("/");
-    } else if (authState?.authenticated === true) {
+    } else if (!authState?.authenticated === true) {
       router.replace("/(main)");
     }
   }, [authState]);

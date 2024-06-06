@@ -31,19 +31,21 @@ const API = {
   getRoutes: async (body: any) => {
 
     try {
-      const apiUrlWithParams = `https://graphhopper.com/api/1/route?key=d209595b-8719-452e-b9d7-2d3e9d4a0384`;
+      const apiUrlWithParams = `https://graphhopper.com/api/1/route?point=24.9502446,66.9939479&point=24.9320564,67.0227543&profile=car&locale=de&calc_points=true&key=d209595b-8719-452e-b9d7-2d3e9d4a0384`;
   
       const fetchOptions = {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        
+        // body: JSON.stringify(body),
       };
   
       const response = await fetch(apiUrlWithParams, fetchOptions);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+
       }
       const data = await response.json();
       return data;
