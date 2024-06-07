@@ -123,7 +123,7 @@ export default function MarkAttendance() {
         console.log(error);
       }
     },
-    1000
+    500
   );
 
   useEffect(() => {
@@ -142,7 +142,7 @@ export default function MarkAttendance() {
       const arr = decodePolyline(points);
       setPoly(arr);
       console.log(arr)
-    }
+      }
   }, [res]);
 
   // const points = (res && res["paths"])?.map((v:any)=>v.points)[0]
