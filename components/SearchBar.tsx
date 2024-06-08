@@ -1,12 +1,56 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { MaterialCommunityIcons, FontAwesome6 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import SearchCard from "./SearchCard";
 import { Dropdown } from "react-native-element-dropdown";
 import API from "@/constants/Api";
 import { debounce } from "lodash";
 import { GlobalContext } from "@/app/(main)/globalContext";
+import { router } from "expo-router";
+import * as Location from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+const clearAllData = async () => {
+  try {
+    await AsyncStorage.clear();
+    console.log('All data cleared from AsyncStorage');
+  } catch (e) {
+    console.error('Error clearing data from AsyncStorage', e);
+  }
+};
+
+// Call the function to clear all data
+
+const storeData = async (key: any, value: any) => {
+  try {
+    // Get the existing data for the key
+    const existingData = await AsyncStorage.getItem(key);
+    
+    let newArray = [];
+    
+    if (existingData !== null) {
+      // Parse the existing data to an array
+      newArray = JSON.parse(existingData);
+      
+      // Check if the existing data is an array, if not convert it to an array
+      if (!Array.isArray(newArray)) {
+        newArray = [newArray];
+      }
+    }
+    
+    // Add the new value to the array
+    newArray.push(value);
+    
+    // Store the updated array back to AsyncStorage
+    const val = JSON.stringify(newArray);
+    await AsyncStorage.setItem(key, val);
+    
+  } catch (e) {
+    console.error('Error storing data', e);
+  }
+};
+
 
 const SearchBar = () => {
   const { state, updateFirstLocation, updateSecondLocation } =
@@ -19,12 +63,6 @@ const SearchBar = () => {
     updateSecondLocation(data);
   };
 
-  const navigation = useNavigation();
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
   const [iconValue, setIconValue] = useState<any>("motorbike");
   const [value, setValue] = useState<any>(null);
   const [isFocus, setIsFocus] = useState(false);
@@ -35,8 +73,49 @@ const SearchBar = () => {
     useState<string>("");
   const [myRes, setMyRes] = useState<any>([]);
   const [res, setRes] = useState<any>([]);
+  const [location, setLocation] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<any>(null);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("search-destination");
+      if (value !== null) {
+        const val = JSON.parse(value);
+        setRes(Array.isArray(val) ? val : [val]);
+      }
+    } catch (e) {
+      console.error('Error reading value', e);
+    }
+  };
+  
+  async function getCurrentLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    const { coords } = location; // <- potential issue here
+    if (coords) {
+      let designLocation: any = {
+        lat: coords.latitude,
+        lng: coords.longitude,
+        name: "use my location",
+        _index: myRes.length > 0 ? +myRes[myRes.length - 1]._index + 1 : 0,
+      };
+      setLocation(designLocation);
+    } else {
+      setErrorMsg("Unable to retrieve location data");
+    }
+  }
 
   useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  useEffect(() => {
+    getData();
+    
     if (value != null) {
       handleMyLocationData(value);
     }
@@ -50,11 +129,13 @@ const SearchBar = () => {
       try {
         const response = await API.getCode(searchLocationValue);
         const result = await response.hits;
-        setMyRes(result.filter((v: any) => v.country == "Pakistan"));
+        const filter = result.filter((v: any) => v.country == "Pakistan");
+
+        setMyRes((val: any) => [...val, ...filter]);
       } catch (error) {
         console.log(error);
       }
-    }, 1000); // 1sec debounce delay
+    }, 500); // .5sec debounce delay
     if (searchLocationValue.trim() != "") {
       locationDelayedApi();
     }
@@ -66,16 +147,33 @@ const SearchBar = () => {
       try {
         const response = await API.getCode(searchDestinationValue);
         const result = await response.hits;
-        setRes(result.filter((v: any) => v.country == "Pakistan"));
+        const filter = result.filter((v: any) => v.country == "Pakistan");
+
+        setRes((val: any) => {
+          const newValues = filter.filter((item: any) =>
+            !val.some((existingItem: any) => existingItem._index === item._index)
+          );
+          return [...val, ...newValues];
+        });
       } catch (error) {
         console.log(error);
       }
-    }, 1000); // 1sec debounce delay
+    }, 500);
     if (searchDestinationValue.trim() != "") {
       destinationDelayedApi();
     }
     return destinationDelayedApi.cancel;
   }, [searchDestinationValue]);
+
+  useEffect(() => {
+    if (state.firstLocation && state.secondLocation) {
+      router.push("/(map)");
+    }
+  }, [state]);
+
+  const handleGoBack = () => {
+    router.push("/(map)");
+  };
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -238,9 +336,7 @@ const SearchBar = () => {
         <View>
           <TouchableOpacity
             style={[styles.bottomBtn, { backgroundColor: "#175E96" }]}
-            onPress={() => {
-              // handle onPress
-            }}
+            onPress={() => storeData("search-destination", destinationValue)}
           >
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>

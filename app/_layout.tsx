@@ -1,6 +1,10 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { AuthProvider, useAuth } from "./authContext";
 import { useEffect } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+
+SplashScreen.preventAutoHideAsync();
 
 const StackLayout = () => {
   const { authState } = useAuth();
@@ -12,10 +16,24 @@ const StackLayout = () => {
 
     if (!authState?.authenticated && inAuthGroup) {
       router.replace("/");
-    } else if (!authState?.authenticated === true) {
+    } else if (authState?.authenticated === true) {
       router.replace("/(main)");
     }
   }, [authState]);
+
+  const [loaded] = useFonts({
+    SpaceMono: require("./../assets/fonts/SpaceMono-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <Stack>
