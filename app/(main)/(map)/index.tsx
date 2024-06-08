@@ -178,7 +178,7 @@
 // });
 
 import React, { useEffect, useContext, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import {
@@ -190,6 +190,8 @@ import { debounce } from "lodash";
 import API from "@/constants/Api";
 import { GlobalContext } from "../globalContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DestinationMarker from '@/assets/images/DestinationMarker.png'
+import locacationMarker  from '@/assets/images/locacationMarker.png'
 
 function decodePolyline(encoded: any) {
   let points = [];
@@ -303,9 +305,11 @@ export default function Page() {
               latitude: state.firstLocation.point.lat,
               longitude: state.firstLocation.point.lng,
             }}
-            title="First Marker"
-            description="This is the first marker"
-          />
+            title="location "
+          >
+
+            <Image style={{height:35,width:35}} source={locacationMarker}/>
+          </Marker>
         )}
 
         {state.secondLocation && (
@@ -314,10 +318,12 @@ export default function Page() {
               latitude: state.secondLocation.point.lat,
               longitude: state.secondLocation.point.lng,
             }}
-            title="Second Marker"
-            description="This is the second marker"
-          />
+            title="Destination"
+          >
+            <Image style={{height:45,width:45}} source={DestinationMarker}/>
+          </Marker>
         )}
+        
         {/* <Polyline
             coordinates={coord}
             strokeWidth={5}

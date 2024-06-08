@@ -65,7 +65,7 @@ const SearchBar = () => {
   // }, []);
 
   useEffect(() => { 
-
+    
     if (value != null) {
       handleMyLocationData(value);
     }
