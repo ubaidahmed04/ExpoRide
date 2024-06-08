@@ -1,183 +1,336 @@
+// import React, { useEffect, useContext, useState } from "react";
+// import { Button, StyleSheet, View } from "react-native";
+// import { Link } from "expo-router";
+// import MapView, { Marker } from "react-native-maps";
+// import { Polyline } from "react-native-maps";
+// import { FontAwesome6 } from "@expo/vector-icons";
+// import { debounce } from "lodash";
+// import API from "@/constants/Api";
+// import { GlobalContext } from "../globalContext";
+
+// function decodePolyline(encoded: string) {
+//   let points = [];
+//   let index = 0,
+//     len = encoded.length;
+//   let lat = 0,
+//     lng = 0;
+
+//   while (index < len) {
+//     let b,
+//       shift = 0,
+//       result = 0;
+//     do {
+//       b = encoded.charCodeAt(index++) - 63;
+//       result |= (b & 0x1f) << shift;
+//       shift += 5;
+//     } while (b >= 0x20);
+//     let dlat = result & 1 ? ~(result >> 1) : result >> 1;
+//     lat += dlat;
+
+//     shift = 0;
+//     result = 0;
+//     do {
+//       b = encoded.charCodeAt(index++) - 63;
+//       result |= (b & 0x1f) << shift;
+//       shift += 5;
+//     } while (b >= 0x20);
+//     let dlng = result & 1 ? ~(result >> 1) : result >> 1;
+//     lng += dlng;
+
+//     points.push({ latitude: lat * 1e-5, longitude: lng * 1e-5 });
+//   }
+
+//   return points;
+// }
+
+// export default function MarkAttendance() {
+//   const [poly, setPoly] = useState<any>([]);
+//   const [res, setRes] = useState<any>(null);
+//   const { state } = useContext(GlobalContext);
+
+//   const initialRegion = {
+//     latitude: 37.78825,
+//     longitude: -122.4324,
+//     latitudeDelta: 0.0922,
+//     longitudeDelta: 0.0421,
+//   };
+
+//   const locationDelayedApi = debounce(
+//     async (mylocation: any, destination: any) => {
+//       let obj = {
+//         point_1: `${mylocation["point"]["lng"]},${mylocation["point"]["lat"]}`,
+//         point_2: `${destination["point"]["lng"]},${destination["point"]["lat"]}`,
+//       };
+
+//       try {
+//         const response = await API.getRoutes(obj);
+//         setRes(response);
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     },
+//     1000
+//   );
+
+//   useEffect(() => {
+//     if (state.firstLocation && state.secondLocation) {
+//       locationDelayedApi(state.firstLocation, state.secondLocation);
+//     }
+//   }, [state]);
+
+//   useEffect(() => {
+//     if (res) {
+//       console.log("API Response: ", res);
+//       const points = res.paths?.map((v: any) => v.points)[0];
+//       if (points) {
+//         const arr = decodePolyline(points);
+//         console.log("Decoded Polyline: ", arr);
+//         setPoly(arr);
+//       }
+//     }
+//   }, [res]);
+
+//   const polylineCoordinates = [
+//     { latitude: 24.860735, longitude: 67.001137 }, // Karachi
+//     { latitude: 30.375321, longitude: 69.345116 }, // Near Multan
+//     { latitude: 31.54972, longitude: 74.343611 }, // Lahore
+//     { latitude: 33.684422, longitude: 73.047885 }, // Islamabad
+//     { latitude: 34.015137, longitude: 71.524918 }, // Peshawar
+//     { latitude: 35.222, longitude: 72.425835 }, // Near Swat Valley
+//   ];
+
+//   console.log("res ---===>", res);
+//   console.log("poly ---===>", poly);
+
+//   return (
+//     <View style={styles.container}>
+//       <MapView style={styles.map} initialRegion={initialRegion}>
+//         {state["firstLocation"] && (
+//           <Marker
+//             coordinate={{
+//               latitude: state.firstLocation?.point?.lat,
+//               longitude: state.firstLocation?.point?.lng,
+//             }}
+//             title="Marker Title"
+//             description="Marker Description"
+//           />
+//         )}
+
+//         {state["secondLocation"] && (
+//           <Marker
+//             coordinate={{
+//               latitude: state.secondLocation?.point?.lat,
+//               longitude: state.secondLocation?.point?.lng,
+//             }}
+//             title="Marker Title"
+//             description="Marker Description"
+//           />
+//         )}
+//          {poly.length > 0 && (
+//           <Polyline
+//             coordinates={poly}
+//             strokeWidth={5}
+//             strokeColor="red"
+//           />
+//         )}
+
+//         {/* <Polyline coordinates={polylineCoordinates} strokeWidth={5} strokeColor="red" /> */}
+//       </MapView>
+//       <View style={styles.Movebutton}>
+//         <Link style={styles.button} href="/(location)">
+//           <FontAwesome6 name="arrow-trend-up" size={40} />
+//         </Link>
+//       </View>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     ...StyleSheet.absoluteFillObject,
+//     justifyContent: "flex-end",
+//     alignItems: "center",
+//   },
+//   map: {
+//     ...StyleSheet.absoluteFillObject,
+//   },
+//   button: {
+//     marginTop: 3,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     paddingVertical: 17,
+//     paddingHorizontal: 18,
+//     borderRadius: 30,
+//     elevation: 3,
+//     backgroundColor: "#FFFFFF",
+//     color: "#175E96",
+//   },
+//   text: {
+//     fontSize: 18,
+//     fontWeight: "500",
+//     letterSpacing: 0.25,
+//     color: "white",
+//   },
+//   Movebutton: {
+//     bottom: 60,
+//     left: 110,
+//   },
+// });
+
 import React, { useEffect, useContext, useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
-import MapView, { Marker } from "react-native-maps";
-import { Polyline } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { debounce } from "lodash";
 import API from "@/constants/Api";
 import { GlobalContext } from "../globalContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function decodePolyline(encoded: string) {
-  // console.log("decode func")
+function decodePolyline(encoded: any) {
   let points = [];
-  let index = 0,
-    len = encoded.length;
-  let lat = 0,
-    lng = 0;
+  let index = 0, len = encoded.length;
+  let lat = 0, lng = 0;
 
   while (index < len) {
-    let b,
-      shift = 0,
+      let b, shift = 0, result = 0;
+      do {
+          b = encoded.charCodeAt(index++) - 63;
+          result |= (b & 0x1f) << shift;
+          shift += 5;
+      } while (b >= 0x20);
+      let dlat = result & 1 ? ~(result >> 1) : result >> 1;
+      lat += dlat;
+
+      shift = 0;
       result = 0;
-    do {
-      b = encoded.charCodeAt(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    let dlat = result & 1 ? ~(result >> 1) : result >> 1;
-    lat += dlat;
+      do {
+          b = encoded.charCodeAt(index++) - 63;
+          result |= (b & 0x1f) << shift;
+          shift += 5;
+      } while (b >= 0x20);
+      let dlng = result & 1 ? ~(result >> 1) : result >> 1;
+      lng += dlng;
 
-    shift = 0;
-    result = 0;
-    do {
-      b = encoded.charCodeAt(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    let dlng = result & 1 ? ~(result >> 1) : result >> 1;
-    lng += dlng;
-
-    points.push([lat * 1e-5, lng * 1e-5]);
+      points.push({ latitude: lng * 1e-5, longitude: lat * 1e-5 });
   }
 
   return points;
 }
 
-// Example usage
-// const encodedString = "cbhwCmw{wK_@Hg@gBNMjIyBFk@LeBBk@HiBTsCEaCT_Av@eBZ_@x@}BzCdBtBwFpA_Dq@i@\\gAXk@tByEe@{@Cw@@UD?p@c@dA{@NJv@kBzG}NzEuK~BkFzEoK`HwO|AiDJ_@AWSU{C{Bc@e@Mk@Go@?]d@_Ct@_DjATlBf@A^Fo@F_@DQNWnEaEDYr@uAHMBARW@St@yA@MAGCE?C?IP[bBkBNPD?BAz@o@d@Yr@W~GbKnArBv@L|IdA@Jr@cB[IaI{@GEGMASPsBFMJEk@u@";
-// const routePoints = decodePolyline(encodedString);
-// console.log(routePoints);
-
-export default function MarkAttendance() {
-  const [poly, setPoly] = useState<any>(null);
+export default function Page() {
+  const [poly, setPoly] = useState<any>([]);
   const [res, setRes] = useState<any>(null);
-  const { state } = useContext(GlobalContext);
-  let routeRes;
-  const navigation = useNavigation();
-  const initialRegion = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+  const [recent, setRecent] = useState<any>(null);
+  const {state} =useContext(GlobalContext)
+useEffect(() => {
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("search-destination");
+      if (value !== null) {
+        const val = JSON.parse(value);
+        setRecent(Array.isArray(val) ? val : [val]);
+      }
+    } catch (e) {
+      console.error('Error reading value', e);
+    }
   };
+  getData()
+}, [])
 
-  let body = {
-    points: [
-      [66.9939479, 24.9502446],
-      [67.0227543, 24.9320564],
-    ],
-    profile: "car",
-    elevation: true,
-    instructions: true,
-    locale: "en_US",
-    points_encoded: true,
-    points_encoded_multiplier: 1000000,
-    snap_preventions: ["ferry"],
-    details: [
-      "road_class",
-      "road_environment",
-      "road_access",
-      "surface",
-      "max_speed",
-      "average_speed",
-      "toll",
-      "track_type",
-      "country",
-    ],
+// const handleMyLocationData = (data: any) => {
+//   updateFirstLocation(data);
+// };
+// const handleSecondLocationdata = (data: any) => {
+//   updateSecondLocation(data);
+// };
+  const initialRegion = {
+    latitude: 30.3753,
+    longitude: 69.3451,
+    latitudeDelta: 5,
+    longitudeDelta: 5,
   };
 
   const locationDelayedApi = debounce(
     async (mylocation: any, destination: any) => {
-      // route api
-      let body = {
-        points: [
-          [mylocation["point"]["lng"], mylocation["point"]["lat"]],
-          [destination["point"]["lng"], destination["point"]["lat"]],
-        ],
-        profile: "car",
-        elevation: true,
-        instructions: true,
-        locale: "en_US",
-        points_encoded: true,
-        points_encoded_multiplier: 1000000,
-        snap_preventions: ["ferry"],
-        details: [
-          "road_class",
-          "road_environment",
-          "road_access",
-          "surface",
-          "max_speed",
-          "average_speed",
-          "toll",
-          "track_type",
-          "country",
-        ],
+      let obj = {
+        point_1: `${mylocation.point.lng},${mylocation.point.lat}`,
+        point_2: `${destination.point.lng},${destination.point.lat}`,
       };
+
       try {
-        const response = await API.getRoutes(body);
+        const response = await API.getRoutes(obj);
         setRes(response);
-        // routeRes = response;
       } catch (error) {
         console.log(error);
       }
     },
     500
   );
+  
 
   useEffect(() => {
-    locationDelayedApi(state["firstLocation"], state["secondLocation"]);
+    if (state.firstLocation && state.secondLocation) {
+      locationDelayedApi(state.firstLocation, state.secondLocation);
+    }
   }, [state]);
 
-  let istrue = false;
-
   useEffect(() => {
-    if (!istrue) {
-      istrue = true;
-      return;
-    }
-    const points = (res && res["paths"])?.map((v: any) => v.points)[0];
-    if (points.trim() != "") {
-      const arr = decodePolyline(points);
-      setPoly(arr);
-      console.log(arr)
+    if (res) {
+      const points = res.paths?.map((v: any) => v.points)[0];
+      if (points) {
+        const arr: any = decodePolyline(points);
+        setPoly(arr);
       }
+    }
   }, [res]);
 
-  // const points = (res && res["paths"])?.map((v:any)=>v.points)[0]
-
-  // console.log("Here is the points",points)
+  let coord = [
+    { latitude: 67.00476, longitude: 24.914440000000003 },
+    { latitude: 67.00704, longitude: 24.911350000000002 },
+    { latitude: 67.00852, longitude: 24.908260000000002 },
+    { latitude: 67.00999, longitude: 24.90397 },
+    { latitude: 67.0112, longitude: 24.900360000000003 },
+    { latitude: 67.01234000000001, longitude: 24.899160000000002 },
+    { latitude: 67.01388, longitude: 24.898300000000003 },
+    { latitude: 67.01589, longitude: 24.898130000000002 },
+    { latitude: 67.01744000000001, longitude: 24.899330000000003 },
+    { latitude: 67.01844000000001, longitude: 24.90088 },
+  ];
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
-        {state["firstLocation"] && (
+        {state.firstLocation && (
           <Marker
             coordinate={{
-              latitude: state.firstLocation?.point?.lat,
-              longitude: state.firstLocation?.point?.lng,
+              latitude: state.firstLocation.point.lat,
+              longitude: state.firstLocation.point.lng,
             }}
-            title="Marker Title"
-            description="Marker Description"
+            title="First Marker"
+            description="This is the first marker"
           />
         )}
 
-        {state["secondLocation"] && (
+        {state.secondLocation && (
           <Marker
             coordinate={{
-              latitude: state.secondLocation?.point?.lat,
-              longitude: state.secondLocation?.point?.lng,
+              latitude: state.secondLocation.point.lat,
+              longitude: state.secondLocation.point.lng,
             }}
-            title="Marker Title"
-            description="Marker Description"
+            title="Second Marker"
+            description="This is the second marker"
           />
         )}
-        {
-Array.isArray(poly) && poly.length>0 && (
-<Polyline coordinates={poly} strokeWidth={5} strokeColor="red" />
-)
-}
+        {/* <Polyline
+            coordinates={coord}
+            strokeWidth={5}
+            strokeColor="red"
+          /> */}
+
+        {poly.length > 0 && (
+          <Polyline coordinates={poly} strokeWidth={5} strokeColor="red" />
+        )}
       </MapView>
       <View style={styles.Movebutton}>
         <Link style={styles.button} href="/(location)">
@@ -208,14 +361,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     color: "#175E96",
   },
-  text: {
-    fontSize: 18,
-    fontWeight: "500",
-    letterSpacing: 0.25,
-    color: "white",
-  },
   Movebutton: {
     bottom: 60,
     left: 110,
   },
 });
+
+// export default Page;

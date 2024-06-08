@@ -1,21 +1,9 @@
 import React, { useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Pressable,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import Animated, { Easing } from "react-native-reanimated"; // or 'react-native'
+import { StyleSheet, ScrollView } from "react-native";
 import SearchBar from "@/components/SearchBar";
 export default function Location() {
-
   return (
-    <ScrollView >
+    <ScrollView>
       <SearchBar />
     </ScrollView>
   );
