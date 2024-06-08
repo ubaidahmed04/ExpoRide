@@ -15,12 +15,15 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
+    "@emailjs/react-native": "^4.2.2",
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.9.26",
+    "emailjs-com": "^3.2.0",
     "expo": "~51.0.10",
     "expo-camera": "~15.0.10",
     "expo-constants": "~16.0.2",

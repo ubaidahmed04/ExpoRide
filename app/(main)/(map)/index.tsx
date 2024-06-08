@@ -178,10 +178,14 @@
 // });
 
 import React, { useEffect, useContext, useState } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
 import MapView, { Marker, Polyline } from "react-native-maps";
-import { FontAwesome6 } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome6,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { debounce } from "lodash";
 import API from "@/constants/Api";
 import { GlobalContext } from "../globalContext";
@@ -189,30 +193,34 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function decodePolyline(encoded: any) {
   let points = [];
-  let index = 0, len = encoded.length;
-  let lat = 0, lng = 0;
+  let index = 0,
+    len = encoded.length;
+  let lat = 0,
+    lng = 0;
 
   while (index < len) {
-      let b, shift = 0, result = 0;
-      do {
-          b = encoded.charCodeAt(index++) - 63;
-          result |= (b & 0x1f) << shift;
-          shift += 5;
-      } while (b >= 0x20);
-      let dlat = result & 1 ? ~(result >> 1) : result >> 1;
-      lat += dlat;
-
-      shift = 0;
+    let b,
+      shift = 0,
       result = 0;
-      do {
-          b = encoded.charCodeAt(index++) - 63;
-          result |= (b & 0x1f) << shift;
-          shift += 5;
-      } while (b >= 0x20);
-      let dlng = result & 1 ? ~(result >> 1) : result >> 1;
-      lng += dlng;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    let dlat = result & 1 ? ~(result >> 1) : result >> 1;
+    lat += dlat;
 
-      points.push({ latitude: lng * 1e-5, longitude: lat * 1e-5 });
+    shift = 0;
+    result = 0;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    let dlng = result & 1 ? ~(result >> 1) : result >> 1;
+    lng += dlng;
+
+    points.push({ latitude: lng * 1e-5, longitude: lat * 1e-5 });
   }
 
   return points;
@@ -221,29 +229,15 @@ function decodePolyline(encoded: any) {
 export default function Page() {
   const [poly, setPoly] = useState<any>([]);
   const [res, setRes] = useState<any>(null);
+  const [distance, setDistance] = useState<any>(null);
   const [recent, setRecent] = useState<any>(null);
-  const {state} =useContext(GlobalContext)
-useEffect(() => {
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("search-destination");
-      if (value !== null) {
-        const val = JSON.parse(value);
-        setRecent(Array.isArray(val) ? val : [val]);
-      }
-    } catch (e) {
-      console.error('Error reading value', e);
-    }
-  };
-  getData()
-}, [])
-
-// const handleMyLocationData = (data: any) => {
-//   updateFirstLocation(data);
-// };
-// const handleSecondLocationdata = (data: any) => {
-//   updateSecondLocation(data);
-// };
+  const { state } = useContext(GlobalContext);
+  // const handleMyLocationData = (data: any) => {
+  //   updateFirstLocation(data);
+  // };
+  // const handleSecondLocationdata = (data: any) => {
+  //   updateSecondLocation(data);
+  // };
   const initialRegion = {
     latitude: 30.3753,
     longitude: 69.3451,
@@ -261,13 +255,14 @@ useEffect(() => {
       try {
         const response = await API.getRoutes(obj);
         setRes(response);
+        setDistance(res.paths[0].distance / 1000);
+        console.log(" show response ", response.paths[0].distance / 1000);
       } catch (error) {
         console.log(error);
       }
     },
     500
   );
-  
 
   useEffect(() => {
     if (state.firstLocation && state.secondLocation) {
@@ -280,6 +275,7 @@ useEffect(() => {
       const points = res.paths?.map((v: any) => v.points)[0];
       if (points) {
         const arr: any = decodePolyline(points);
+
         setPoly(arr);
       }
     }
@@ -334,9 +330,77 @@ useEffect(() => {
       </MapView>
       <View style={styles.Movebutton}>
         <Link style={styles.button} href="/(location)">
-          <FontAwesome6 name="arrow-trend-up" size={40} />
+          {!res ? (
+            <FontAwesome6 name="arrow-trend-up" size={40} />
+          ) : (
+            <Entypo name="circle-with-cross" size={40} />
+          )}
         </Link>
       </View>
+      {res && (
+        <View
+          style={{
+            backgroundColor: "#fff",
+            width: "100%",
+            height: 200,
+            padding: 10,
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              paddingBottom: 15,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="motorbike"
+              size={40}
+              color={"#175E96"}
+            />
+
+            <Text>{(res.paths[0].distance / 1000).toFixed(1)} km </Text>
+            <Text> {((res.paths[0].distance / 1000) * 50).toFixed()} Rs</Text>
+            <Button title="Booking Ride" color={"#175E96"} />
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              paddingBottom: 15,
+            }}
+          >
+            <MaterialCommunityIcons name="car" size={40} color={"#175E96"} />
+
+            <Text>{(res.paths[0].distance / 1000).toFixed(1)} km </Text>
+            <Text> {((res.paths[0].distance / 1000) * 150).toFixed()} Rs</Text>
+            <Button title="Booking Ride" color={"#175E96"} />
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              paddingBottom: 10,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="rickshaw"
+              size={40}
+              color={"#175E96"}
+            />
+            <Text>{(res.paths[0].distance /1000).toFixed(1)} km </Text>
+            <Text> {((res.paths[0].distance /1000*100).toFixed())} Rs </Text>
+
+            <Button title="Booking Ride"  color={"#175E96"} />
+          </View>
+        </View>
+      )}
     </View>
   );
 }

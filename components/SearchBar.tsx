@@ -11,45 +11,8 @@ import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const clearAllData = async () => {
-  try {
-    await AsyncStorage.clear();
-    console.log('All data cleared from AsyncStorage');
-  } catch (e) {
-    console.error('Error clearing data from AsyncStorage', e);
-  }
-};
 
 // Call the function to clear all data
-
-const storeData = async (key: any, value: any) => {
-  try {
-    // Get the existing data for the key
-    const existingData = await AsyncStorage.getItem(key);
-    
-    let newArray = [];
-    
-    if (existingData !== null) {
-      // Parse the existing data to an array
-      newArray = JSON.parse(existingData);
-      
-      // Check if the existing data is an array, if not convert it to an array
-      if (!Array.isArray(newArray)) {
-        newArray = [newArray];
-      }
-    }
-    
-    // Add the new value to the array
-    newArray.push(value);
-    
-    // Store the updated array back to AsyncStorage
-    const val = JSON.stringify(newArray);
-    await AsyncStorage.setItem(key, val);
-    
-  } catch (e) {
-    console.error('Error storing data', e);
-  }
-};
 
 
 const SearchBar = () => {
@@ -76,18 +39,6 @@ const SearchBar = () => {
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("search-destination");
-      if (value !== null) {
-        const val = JSON.parse(value);
-        setRes(Array.isArray(val) ? val : [val]);
-      }
-    } catch (e) {
-      console.error('Error reading value', e);
-    }
-  };
-  
   async function getCurrentLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -109,13 +60,12 @@ const SearchBar = () => {
     }
   }
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, []);
 
-  useEffect(() => {
-    getData();
-    
+  useEffect(() => { 
+
     if (value != null) {
       handleMyLocationData(value);
     }
@@ -336,7 +286,6 @@ const SearchBar = () => {
         <View>
           <TouchableOpacity
             style={[styles.bottomBtn, { backgroundColor: "#175E96" }]}
-            onPress={() => storeData("search-destination", destinationValue)}
           >
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>

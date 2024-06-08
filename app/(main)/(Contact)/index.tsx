@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
-
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, Alert } from 'react-native';
+import { send, EmailJSResponseStatus } from '@emailjs/react-native';
 const ProfileScreen = () => {
-  const [name, setName] = useState('John Mac');
-  const [email, setEmail] = useState('johnmac@example.com');
-  const [phone, setPhone] = useState('+92 3127718780');
-  const [address, setAddress] = useState('123 Main St, Karachi, Pakistan');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
 
-  const handleSave = () => {
-    // Handle save action (e.g., update user profile)
-    console.log('Profile saved');
+  const onSubmit = async () => {
+    try {
+      await send(
+        'service_mj7izqf',
+        'template_m81x4lk',
+        {
+          name,
+          email,
+          phone,
+          address,
+          message: 'This is a static message',
+        },
+        {
+          publicKey: 'BGeB65cbgpJqCoxYb',
+        },
+      );
+
+      console.log('SUCCESS!');
+    } catch (err) {
+      if (err instanceof EmailJSResponseStatus) {
+        console.log('EmailJS Request Failed...', err);
+      }
+
+      console.log('ERROR', err);
+    }
   };
 
   return (
@@ -24,12 +46,14 @@ const ProfileScreen = () => {
         <TextInput
           style={styles.input}
           value={name}
+          placeholder='John Mac'
           onChangeText={setName}
         />
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
           value={email}
+          placeholder='johnmac@example.com'
           onChangeText={setEmail}
         />
         <Text style={styles.label}>Phone</Text>
@@ -37,16 +61,18 @@ const ProfileScreen = () => {
           style={styles.input}
           value={phone}
           onChangeText={setPhone}
+          placeholder='+92 3127718780'
           keyboardType="phone-pad"
         />
         <Text style={styles.label}>Address</Text>
         <TextInput
           style={styles.input}
           value={address}
+          placeholder='123 Main St, Karachi, Pakistan'
           onChangeText={setAddress}
         />
         <View style={{marginTop:10,borderRadius:10}}>
-        <Button title="Submit" onPress={handleSave} color="#175E96" />
+        <Button title="Submit" onPress={onSubmit} color="#175E96" />
         </View>
       </View>
     </ScrollView>
