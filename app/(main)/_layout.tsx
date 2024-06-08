@@ -16,6 +16,7 @@ import "react-native-reanimated";
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Text, View } from "react-native";
+import { Feather, SimpleLineIcons } from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -93,6 +94,44 @@ export default function RootLayout() {
               drawerActiveTintColor: "#fff",
             }}
           />
+          
+          <Drawer.Screen
+            name="(Profile)"
+            options={{
+              drawerLabel: "Profile",
+              title: "Profile",
+              drawerIcon: ({ color, size }: any) => (
+                <SimpleLineIcons name="user" size={size} color={color} />
+              ),
+              drawerActiveBackgroundColor: "#175E96",
+              drawerActiveTintColor: "#fff",
+            }}
+          />
+          <Drawer.Screen
+            name="(Settings)"
+            options={{
+              drawerLabel: "Settings",
+              title: "Settings",
+              drawerIcon: ({ color, size }: any) => (
+                <Feather name="settings" size={size} color={color} />
+              ),
+              drawerActiveBackgroundColor: "#175E96",
+              drawerActiveTintColor: "#fff",
+            }}
+          />
+          <Drawer.Screen
+            name="(Contact)"
+            options={{
+              drawerLabel: "Contact US",
+              title: "Get In Touch",
+            
+              drawerIcon: ({ color, size }: any) => (
+                <MaterialCommunityIcons name="contacts" size={size} color={color} />
+              ),
+              drawerActiveBackgroundColor: "#175E96",
+              drawerActiveTintColor: "#fff",
+            }}
+          />
         </Drawer>
       </GestureHandlerRootView>
     </GlobalProvider>
@@ -102,6 +141,7 @@ export default function RootLayout() {
 // import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import { Drawer } from "expo-router/drawer";
 // import CustomDrawer from "@/components/cutomDrawer";
+import { Colors } from './../../constants/Colors';
 
 // export default function Layout() {
 //   return (

@@ -41,11 +41,11 @@ export default function DashboardScreen() {
           <View style={{ marginBottom: 10 }}>
             <Image
               source={{
-                uri: "https://www.shareicon.net/data/2015/06/12/53301_car_512x512.png", // ye dono  image add ki front page ki he but show nh ho rhi ye dekh lena
+                uri: "https://www.shareicon.net/data/2015/06/12/53301_car_512x512.png", 
               }}
               style={Styles.cardImage1}
             />
-            <Text style={Styles.cardText}>Ride go</Text>
+            <Text style={Styles.cardText}> Go Ride </Text>
           </View>
         </Link>
         <Link href={"/(map)/(location)"}>
